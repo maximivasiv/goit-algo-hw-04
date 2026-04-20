@@ -1,15 +1,29 @@
-import random
+def get_cats_info(path):
+    cats = []
 
-def get_numbers_ticket(min, max, quantity):
-    if (
-        min < 1 or
-        max > 1000 or
-        min > max or
-        quantity < 1 or
-        quantity > (max - min + 1)
-    ):
+    try:
+        with open(path, "r", encoding="utf-8") as file:
+            for line in file:
+                line = line.strip()
+                if not line:
+                    continue
+
+                try:
+                    cat_id, name, age = line.split(",")
+                    cat_info = {
+                        "id": cat_id,
+                        "name": name,
+                        "age": age
+                    }
+                    cats.append(cat_info)
+                except ValueError:
+                    print(f"Некоректний рядок у файлі: {line}")
+
+        return cats
+
+    except FileNotFoundError:
+        print("Файл не знайдено.")
         return []
-
-    numbers = random.sample(range(min, max + 1), quantity)
-    numbers.sort()
-    return numbers
+    except OSError:
+        print("Помилка при читанні файлу.")
+        return []
