@@ -1,10 +1,30 @@
-from datetime import datetime
+def total_salary(path):
+    total = 0
+    count = 0
 
-def get_days_from_today(date):
     try:
-        input_date = datetime.strptime(date, "%Y-%m-%d").date()
-        today = datetime.today().date()
-        delta = today - input_date
-        return delta.days
-    except ValueError:
-        return "Невірний формат дати"
+        with open(path, "r", encoding="utf-8") as file:
+            for line in file:
+                line = line.strip()
+                if not line:
+                    continue
+
+                try:
+                    name, salary = line.split(",")
+                    total += int(salary)
+                    count += 1
+                except ValueError:
+                    print(f"Некоректний рядок у файлі: {line}")
+
+        if count == 0:
+            return (0, 0)
+
+        average = total / count
+        return (total, average)
+
+    except FileNotFoundError:
+        print("Файл не знайдено.")
+        return (0, 0)
+    except OSError:
+        print("Помилка при читанні файлу.")
+        return (0, 0)
